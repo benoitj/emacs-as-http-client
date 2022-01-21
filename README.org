@@ -1,0 +1,115 @@
+* My Emacs as a http client demo
+
+* Basic use cases
+
+1. call a auth API to get a token
+   1. extract the token for further calls
+2. with authorization headers
+   1. call http API to GET data
+   2. call http API to POST new data
+      1. retrieve created ressource ID
+   3. call http API to DELETE an element
+      1. with created resource ID
+3. use different "environments" API variables
+   1. mostly urls, creds
+  
+Test with org mode integration when possible
+
+* API setup
+
+To achieve this, a docker based mock API will be launched.
+
+The scenario: an API to register, and list crafters.
+
+It will have the following endpoints
+
+** TODO Authenticate
+
+POST https://localhost:8888/dev/auth
+
+body has request parameters:
+1. client_id=myclient
+2. client_secret=mysecret
+
+returns:
+#+begin_quote
+{
+  "token": "somerandomstring"
+}
+#+end_quote
+
+where:
+1. /token/ has to be specified in further requests with the header /Authorization: Token <the token value>/
+
+** TODO Fetch the list of crafters
+GET https://localhost:8888/dev/crafters
+
+requires authorization
+
+status: 200
+returns a list of crafters:
+#+begin_quote
+[
+  {"id": 1, "name": "The Emacs Crafter"},
+  {"id": 2, "name": "The Guix Crafter"},
+  {"id": 3, "name": "The Nix Crafter"},
+  {"id": 4, "name": "The House Crafter"},
+  {"id": 5, "name": "The Crafter to rule them all"}
+]
+#+end_quote
+
+** TODO register a new crafter
+POST https://localhost:8888/dev/crafters
+
+requires authorization
+
+body:
+#+begin_quote
+  {"name": "The Vim Crafter"}
+#+end_quote
+
+status: 201
+returns:
+#+begin_quote
+{"id": 666, "name": "The Vim Crafter"}
+#+end_quote
+
+** TODO remove a crafter
+DELETE https://localhost:8888/dev/crafters/666
+
+requires authorization
+
+status: 200
+returns:
+#+begin_quote
+{"id": 666, "name": "The Vim Crafter"}
+#+end_quote
+
+** TODO Authenticate on a different environment using variables
+POST https://localhost:8888/test/auth
+
+body has request parameters:
+1. client_id=myclient
+2. client_secret=mysecret
+
+status: 200
+returns:
+#+begin_quote
+{
+  "token": "somerandomstring"
+}
+#+end_quote
+
+where:
+1. /token/ has to be specified in further requests with the header /Authorization: Token <the token value>/
+
+* Start the mock API
+
+#+begin_src shell :noeval
+docker-compose up -d
+#+end_src
+
+* Possible options with emacs
+** TODO [[https://github.com/zweifisch/ob-http][ob-http]]
+** TODO verb
+** TODO restclient-mode
