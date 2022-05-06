@@ -1,0 +1,9 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  api:
+    image: mountebank
+    ports:
+      - "2525:2525"
+    command: mb start
+volumes:
+  logvolume01: {}

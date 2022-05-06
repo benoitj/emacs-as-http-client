@@ -1,4 +1,4 @@
-* My Emacs as a http client demo
+* My Emacs as as http client demo
 
 * Basic use cases
 
@@ -41,7 +41,7 @@ returns:
 where:
 1. /token/ has to be specified in further requests with the header /Authorization: Token <the token value>/
 
-** TODO Fetch the list of crafters
+** TODO Fetch tke list of crafters
 GET https://localhost:8888/dev/crafters
 
 requires authorization
